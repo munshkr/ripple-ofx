@@ -55,6 +55,9 @@ void ofApp::keyPressed(int key) {
     bool modifierPressed = ofxEditor::getSuperAsModifier() ? ofGetKeyPressed(OF_KEY_SUPER) : ofGetKeyPressed(OF_KEY_CONTROL);
     if(modifierPressed) {
         switch(key) {
+            case 'q':
+                ofExit();
+                return;
             case 's':
                 if(editor.getColorScheme()) {
                     editor.clearColorScheme();
