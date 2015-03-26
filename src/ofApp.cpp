@@ -7,12 +7,13 @@ void ofApp::setup() {
     ofSetEscapeQuitsApp(false);
 
     // make sure to load editor font before anything else!
-    ofxEditor::loadFont("fonts/PrintChar21.ttf", 24);
+    //ofxEditor::loadFont("fonts/PrintChar21.ttf", 24);
+    ofxEditor::loadFont("fonts/C64_Pro-STYLE.ttf", 24);
 
     // open a file by default
-    //ofFile testFile;
-    //testFile.open("hi.tidal", ofFile::ReadOnly);
-    //editor.setText(testFile.readToBuffer().getText());
+    ofFile testFile;
+    testFile.open("hi.tidal", ofFile::ReadOnly);
+    editor.setText(testFile.readToBuffer().getText());
 
     ofLogNotice() << "num chars: " << editor.getNumCharacters() << " num lines: " << editor.getNumLines();
 
@@ -94,6 +95,8 @@ void ofApp::setTidalSyntax(ofxEditorColorScheme &scheme) {
     for (int i = 1; i < 10; i++) {
         scheme.setWordColor("d" + ofToString(i), ofColor::fuchsia);
     }
+    scheme.setWordColor("$", ofColor::green);
+    scheme.setWordColor("|+|", ofColor::blue);
 
     scheme.setSingleLineComment("--");
     scheme.setMultiLineComment("{-", "-}");
