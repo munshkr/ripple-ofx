@@ -1,7 +1,6 @@
 #include "ofApp.h"
 
 void ofApp::setup() {
-
     ofSetVerticalSync(true);
 
     // handle ESC internally since we use it to exit selection
@@ -10,59 +9,47 @@ void ofApp::setup() {
     // make sure to load editor font before anything else!
     ofxEditor::loadFont("fonts/PrintChar21.ttf", 24);
 
-    // sample lua syntax
-    colorScheme.setWordColor("function", ofColor::fuchsia);
-    colorScheme.setWordColor("end", ofColor::fuchsia);
-    colorScheme.setSingleLineComment("--");
-    colorScheme.setMultiLineComment("--[[", "]]");
+    // open a file by default
+    //ofFile testFile;
+    //testFile.open("hi.tidal", ofFile::ReadOnly);
+    //editor.setText(testFile.readToBuffer().getText());
 
-    // syntax highlighter colors
-    colorScheme.setStringColor(ofColor::yellow);
-    colorScheme.setNumberColor(ofColor::orangeRed);
-    colorScheme.setCommentColor(ofColor::gray);
-
-    // open test file
-    ofFile testFile;
-    testFile.open("test.txt", ofFile::ReadOnly);
-    editor.setText(testFile.readToBuffer().getText());
     ofLogNotice() << "num chars: " << editor.getNumCharacters() << " num lines: " << editor.getNumLines();
 
-    // default: white text on black background
+    // white text with gray shadow, on black background
     ofBackground(0);
+    editor.getSettings().setTextShadowColor(ofColor::gray);
 
-    // or black text on white background
-    //ofBackground(255);
-    //editor.getSettings().setTextColor(ofColor::black);
-    //editor.getSettings().setTextShadowColor(ofColor::gray);
+    // enable syntax highlighting by default
+    setTidalSyntax(colorScheme);
+    editor.setColorScheme(&colorScheme);
+
+    editor.setAutoFocus(true);
 
     debug = false;
 }
 
 void ofApp::draw() {
-
     editor.draw();
 
-    if(debug) {
-        //editor.drawGrid();
-
+    if (debug) {
         ofSetColor(255);
-        ofDrawBitmapString("fps: "+ofToString((int)ofGetFrameRate()), ofGetWidth()-70, ofGetHeight()-10);
+        ofDrawBitmapString("fps: " + ofToString((int) ofGetFrameRate()), ofGetWidth() - 70, ofGetHeight() - 10);
     }
 }
 
 void ofApp::keyPressed(int key) {
-
     bool modifierPressed = ofxEditor::getSuperAsModifier() ? ofGetKeyPressed(OF_KEY_SUPER) : ofGetKeyPressed(OF_KEY_CONTROL);
-    if(modifierPressed) {
-        switch(key) {
+
+    if (modifierPressed) {
+        switch (key) {
             case 'q':
                 ofExit();
                 return;
             case 's':
-                if(editor.getColorScheme()) {
+                if (editor.getColorScheme()) {
                     editor.clearColorScheme();
-                }
-                else {
+                } else {
                     editor.setColorScheme(&colorScheme);
                 }
                 return;
@@ -101,4 +88,17 @@ void ofApp::keyPressed(int key) {
 
 void ofApp::windowResized(int w, int h) {
     editor.resize(w, h);
+}
+
+void ofApp::setTidalSyntax(ofxEditorColorScheme &scheme) {
+    for (int i = 1; i < 10; i++) {
+        scheme.setWordColor("d" + ofToString(i), ofColor::fuchsia);
+    }
+
+    scheme.setSingleLineComment("--");
+    scheme.setMultiLineComment("{-", "-}");
+
+    scheme.setStringColor(ofColor::yellow);
+    scheme.setNumberColor(ofColor::orangeRed);
+    scheme.setCommentColor(ofColor::gray);
 }

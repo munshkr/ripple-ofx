@@ -14,4 +14,7 @@ class ofApp : public ofBaseApp {
         ofxEditor editor;
         ofxEditorColorScheme colorScheme;
         bool debug; //< show grid and fps?
+
+    private:
+        void setTidalSyntax(ofxEditorColorScheme &scheme);
 };
