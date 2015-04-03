@@ -160,7 +160,10 @@ void ofApp::eval(string s) {
     cout << "\e[33m" << s << "\e[0m" << endl;
     s = s + '\n';
     const char* cstr = s.c_str();
-    write(PARENT_WRITE_FD, cstr, strlen(cstr));
+    int res = write(PARENT_WRITE_FD, cstr, strlen(cstr));
+    if (res == -1) {
+        perror("write");
+    }
 }
 
 void ofApp::read_async() {
