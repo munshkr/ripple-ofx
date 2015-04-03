@@ -1,4 +1,5 @@
 bin/libs
 bin/rippl
+pipeghci
 obj
 *.swp
