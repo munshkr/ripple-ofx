@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxEditor.h"
+#include "TidalRepl.h"
 
 class ofApp : public ofBaseApp {
     public:
@@ -19,11 +20,7 @@ class ofApp : public ofBaseApp {
     private:
         void setTidalSyntax(ofxEditorColorScheme &scheme);
         string getParagraph();
+        void executeScript();
 
-        void initRepl();
-        void execute();
-        void eval(string s);
-        void read_async();
-
-        char buf[4096];
+        TidalRepl repl;
 };
