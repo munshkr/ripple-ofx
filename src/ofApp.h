@@ -6,6 +6,7 @@
 class ofApp : public ofBaseApp {
     public:
         void setup();
+        void update();
         void draw();
 
         void keyPressed(int key);
@@ -17,4 +18,12 @@ class ofApp : public ofBaseApp {
 
     private:
         void setTidalSyntax(ofxEditorColorScheme &scheme);
+        string getParagraph();
+
+        void initRepl();
+        void execute();
+        void eval(string s);
+        void read_async();
+
+        char buf[4096];
 };
