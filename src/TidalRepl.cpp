@@ -76,6 +76,13 @@ TidalRepl::TidalRepl() {
 }
 
 TidalRepl::~TidalRepl() {
+    if (repl_pid) kill(repl_pid, SIGTERM);
+
+    close(PARENT_READ_FD);
+    close(PARENT_WRITE_FD);
+    close(PARENT_ERROR_FD);
+
+    cout << "\e[0m" << endl;
 }
 
 void TidalRepl::eval(string s) {
