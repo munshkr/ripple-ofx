@@ -85,15 +85,13 @@ TidalRepl::~TidalRepl() {
     cout << "\e[0m" << endl;
 }
 
-void TidalRepl::eval(string s) {
-    cout << "\e[33m" << s << "\e[0m" << endl;
+void TidalRepl::eval(string s, bool print) {
+    if (print) cout << "\e[33m" << s << "\e[0m" << endl;
 
     s = s + '\n';
     const char* cstr = s.c_str();
     int res = write(PARENT_WRITE_FD, cstr, strlen(cstr));
-    if (res == -1) {
-        perror("write");
-    }
+    if (res == -1) perror("write");
 }
 
 void TidalRepl::read_async() {
@@ -147,7 +145,7 @@ void TidalRepl::boot(const string& boot_path) {
     if (f.is_open()) {
         stringstream f_buf;
         f_buf << f.rdbuf();
-        eval(f_buf.str());
+        eval(f_buf.str(), false);
     } else {
         cerr << "Unable to open bootstrap file at " << boot_path << endl;
     }

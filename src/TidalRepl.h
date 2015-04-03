@@ -12,7 +12,7 @@ class TidalRepl {
         ~TidalRepl();
 
         void boot(const string& boot_path);
-        void eval(string s);
+        void eval(string s, bool print=true);
         void read_async();
 
     private:
