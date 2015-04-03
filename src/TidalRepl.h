@@ -11,6 +11,7 @@ class TidalRepl {
         TidalRepl();
         ~TidalRepl();
 
+        void boot(const string& boot_path);
         void eval(string s);
         void read_async();
 

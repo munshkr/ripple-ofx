@@ -1,6 +1,8 @@
 #include "TidalRepl.h"
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <vector>
 #include <cstdlib>
 #include <cstdio>
@@ -70,14 +72,6 @@ TidalRepl::TidalRepl() {
         close(CHILD_READ_FD);
         close(CHILD_WRITE_FD);
         close(CHILD_ERROR_FD);
-
-        cout << "Loading Tidal..." << endl;
-        eval(":set prompt \"\"\n" \
-             ":module Sound.Tidal.Context\n" \
-             "let newStream = stream \"127.0.0.1\" 7771 dirt\n" \
-             "d1 <- newStream\n" \
-             "(cps, getNow) <- bpsUtils\n" \
-             "let bps x = cps (x/2)\n");
     }
 }
 
@@ -137,5 +131,17 @@ void TidalRepl::read_async() {
         }
     } else {
         //cerr << '.' << flush;
+    }
+}
+
+void TidalRepl::boot(const string& boot_path) {
+    ifstream f(boot_path.c_str());
+
+    if (f.is_open()) {
+        stringstream f_buf;
+        f_buf << f.rdbuf();
+        eval(f_buf.str());
+    } else {
+        cerr << "Unable to open bootstrap file at " << boot_path << endl;
     }
 }

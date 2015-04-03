@@ -29,6 +29,8 @@ void ofApp::setup() {
     editor.setAutoFocus(true);
 
     debug = false;
+
+    repl.boot("data/boot.hss");
 }
 
 void ofApp::draw() {
