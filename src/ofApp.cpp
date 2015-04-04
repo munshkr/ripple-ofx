@@ -123,12 +123,27 @@ void ofApp::executeScript() {
     if (selection) {
         repl.eval(editor.getText());
     } else {
-        cerr << "not done yet" << endl;
-        //repl.eval(getParagraph());
+        repl.eval(":{\n" + getParagraph() + "\n:}");
     }
 }
 
 string ofApp::getParagraph() {
-    // TODO
-    return "";
+    unsigned int pos = editor.getCurrentPos();
+    const string text = editor.getText();
+
+    size_t start = text.rfind("\n\n", pos);
+    if (start == string::npos) start = 0;
+
+    size_t end = text.find("\n\n", pos);
+    if (end == string::npos) end = text.size();
+
+    size_t len = end - start;
+    start = start == 0 ? start : (start + 2);
+
+    string subs = text.substr(start, len);
+    cerr << "substring: '" << subs << "'" << endl;
+
+    editor.flashSelection(start, end);
+
+    return subs;
 }
