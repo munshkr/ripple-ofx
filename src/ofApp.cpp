@@ -13,7 +13,7 @@ void ofApp::setup() {
 
     // white text with gray shadow, on black background
     ofBackground(0);
-    //editor.getSettings().setTextShadowColor(ofColor::gray);
+    editor.getSettings().setTextShadowColor(ofColor::gray);
 
     // tidal syntax
     tidalSyntax.setWord("$", ofxEditorSyntax::KEYWORD);
@@ -43,11 +43,10 @@ void ofApp::setup() {
     editor.setAutoFocus(true);
 
     // open a file by default
-    ofFile testFile;
-    testFile.open("hi.tidal", ofFile::ReadOnly);
-    editor.setText(testFile.readToBuffer().getText());
-
-    ofLogNotice() << "num chars: " << editor.getNumCharacters() << " num lines: " << editor.getNumLines();
+    //ofFile testFile;
+    //testFile.open("hi.tidal", ofFile::ReadOnly);
+    //editor.setText(testFile.readToBuffer().getText());
+    //ofLogNotice() << "num chars: " << editor.getNumCharacters() << " num lines: " << editor.getNumLines();
 
     debug = false;
 
