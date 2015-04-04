@@ -8,8 +8,8 @@ void ofApp::setup() {
 
     // make sure to load editor font before anything else!
     //ofxEditor::loadFont("fonts/PrintChar21.ttf", 24);
-    //ofxEditor::loadFont("fonts/topaz/TopazPlus_a1200_v1.0.ttf", 48);
-    ofxEditor::loadFont("fonts/C64_Pro-STYLE.ttf", 48);
+    ofxEditor::loadFont("fonts/topaz/TopazPlus_a1200_v1.0.ttf", 48);
+    //ofxEditor::loadFont("fonts/C64_Pro-STYLE.ttf", 48);
 
     // white text with gray shadow, on black background
     ofBackground(0);
