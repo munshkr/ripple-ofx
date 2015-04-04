@@ -11,22 +11,43 @@ void ofApp::setup() {
     //ofxEditor::loadFont("fonts/topaz/TopazPlus_a1200_v1.0.ttf", 48);
     ofxEditor::loadFont("fonts/C64_Pro-STYLE.ttf", 48);
 
-    // open a file by default
-    //ofFile testFile;
-    //testFile.open("hi.tidal", ofFile::ReadOnly);
-    //editor.setText(testFile.readToBuffer().getText());
-
-    ofLogNotice() << "num chars: " << editor.getNumCharacters() << " num lines: " << editor.getNumLines();
-
     // white text with gray shadow, on black background
     ofBackground(0);
     //editor.getSettings().setTextShadowColor(ofColor::gray);
 
-    // enable syntax highlighting by default
-    setTidalSyntax(colorScheme);
+    // tidal syntax
+    tidalSyntax.setWord("$", ofxEditorSyntax::KEYWORD);
+    tidalSyntax.setWord("|+|", ofxEditorSyntax::KEYWORD);
+    tidalSyntax.setWord("<$>", ofxEditorSyntax::KEYWORD);
+    tidalSyntax.setWord("<*>", ofxEditorSyntax::KEYWORD);
+    tidalSyntax.setWord("sound", ofxEditorSyntax::FUNCTION);
+    tidalSyntax.setSingleLineComment("--");
+    tidalSyntax.setMultiLineComment("{-", "-}");
+    for (int i = 1; i < 10; i++) {
+        tidalSyntax.setWord("d" + ofToString(i), ofxEditorSyntax::KEYWORD);
+    }
+    editor.getSettings().setLangSyntax("Tidal", &tidalSyntax);
+
+    // tidal highlighter colors
+    colorScheme.setStringColor(ofColor::yellow);
+    colorScheme.setNumberColor(ofColor::orangeRed);
+    colorScheme.setCommentColor(ofColor::gray);
+    colorScheme.setKeywordColor(ofColor::fuchsia);
+    colorScheme.setTypenameColor(ofColor::red);
+    colorScheme.setFunctionColor(ofColor::green);
     editor.setColorScheme(&colorScheme);
 
+    // associate .tidal with Tidal
+    editor.getSettings().setFileExtLang("tidal", "Tidal");
+
     editor.setAutoFocus(true);
+
+    // open a file by default
+    ofFile testFile;
+    testFile.open("hi.tidal", ofFile::ReadOnly);
+    editor.setText(testFile.readToBuffer().getText());
+
+    ofLogNotice() << "num chars: " << editor.getNumCharacters() << " num lines: " << editor.getNumLines();
 
     debug = false;
 
@@ -101,26 +122,10 @@ void ofApp::windowResized(int w, int h) {
     editor.resize(w, h);
 }
 
-void ofApp::setTidalSyntax(ofxEditorColorScheme &scheme) {
-    for (int i = 1; i < 10; i++) {
-        scheme.setWordColor("d" + ofToString(i), ofColor::orange);
-    }
-    scheme.setWordColor("$", ofColor::green);
-    scheme.setWordColor("|+|", ofColor::orangeRed);
-    scheme.setWordColor("<$>", ofColor::orangeRed);
-    scheme.setWordColor("<*>", ofColor::orangeRed);
-
-    scheme.setSingleLineComment("--");
-    scheme.setMultiLineComment("{-", "-}");
-
-    scheme.setStringColor(ofColor::yellow);
-    scheme.setNumberColor(ofColor::orangeRed);
-    scheme.setCommentColor(ofColor::gray);
-}
-
 void ofApp::executeScript() {
     bool selection = editor.isSelection();
     if (selection) {
+        editor.flashSelection();
         repl.eval(editor.getText());
     } else {
         repl.eval(":{\n" + getParagraph() + "\n:}");
@@ -143,7 +148,7 @@ string ofApp::getParagraph() {
     string subs = text.substr(start, len);
     cerr << "substring: '" << subs << "'" << endl;
 
-    editor.flashSelection(start, end);
+    editor.flashText(start, end);
 
     return subs;
 }
