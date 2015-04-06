@@ -1,5 +1,5 @@
-Rippl
-=====
+Ripple
+======
 
 An OpenGL editor for [Tidal](http://tidalcycles.github.io/).  Inspired in
 [(fluxus)](http://www.pawfal.org/fluxus/) and written in
