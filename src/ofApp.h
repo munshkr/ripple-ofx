@@ -4,7 +4,9 @@
 #include "ofxEditor.h"
 #include "TidalRepl.h"
 
-class ofApp : public ofBaseApp {
+enum EventType { INPUT, OUTPUT, ERROR };
+
+class ofApp : public ofBaseApp, TidalReplListener {
     public:
         void setup();
         void update();
@@ -18,10 +20,17 @@ class ofApp : public ofBaseApp {
         ofxEditorSyntax syntax;
         bool debug; //< show grid and fps?
 
+        void inputLineEvent(const string& line);
+        void outputLineEvent(const string& line);
+        void errorLineEvent(const string& line);
+
     private:
         void setTidalSyntax(ofxEditorColorScheme &scheme);
         string getParagraph();
         void executeScript();
+        void appendReplBuffer(const string& line, const EventType type);
 
         TidalRepl repl;
+        list< pair<EventType, string> > replBuffer;
+        unsigned int replBufferSize;
 };

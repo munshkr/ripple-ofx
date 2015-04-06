@@ -1,6 +1,10 @@
 #include "ofApp.h"
 
+const unsigned int MAX_REPL_LINES = 70;
+
 void ofApp::setup() {
+    replBufferSize = 0;
+
     ofSetVerticalSync(true);
 
     // handle ESC internally since we use it to exit selection
@@ -34,20 +38,42 @@ void ofApp::setup() {
 
     debug = false;
 
-    repl.boot("data/boot.hss");
+    repl.setListener(this);
+    repl.start("data/boot.hss");
 }
 
 void ofApp::draw() {
+    list< pair<EventType, string> >::const_iterator it = replBuffer.begin();
+    for (int y = 0; it != replBuffer.end(); it++, y += 10) {
+        const EventType type = it->first;
+        const string &line = it->second;
+
+        switch (type) {
+          case OUTPUT:
+            ofSetColor(64);
+            break;
+          case INPUT:
+            ofSetColor(0, 127, 0);
+            break;
+          case ERROR:
+            ofSetColor(127, 0, 0);
+            break;
+        }
+
+        ofDrawBitmapString(line, 0, y);
+    }
+
     editor.draw();
 
     if (debug) {
         ofSetColor(255);
         ofDrawBitmapString("fps: " + ofToString((int) ofGetFrameRate()), ofGetWidth() - 70, ofGetHeight() - 10);
     }
+
 }
 
 void ofApp::update() {
-    repl.read_async();
+    repl.readAsync();
 }
 
 void ofApp::keyPressed(int key) {
@@ -109,9 +135,13 @@ void ofApp::executeScript() {
     bool selection = editor.isSelection();
     if (selection) {
         editor.flashSelection();
-        repl.eval(editor.getText());
+        const string &s = editor.getText();
+        repl.eval(s, false);
+        inputLineEvent(s);
     } else {
-        repl.eval(":{\n" + getParagraph() + "\n:}");
+        const string &s = getParagraph();
+        repl.eval(":{\n" + s + "\n:}", false);
+        inputLineEvent(s);
     }
 }
 
@@ -129,9 +159,30 @@ string ofApp::getParagraph() {
     start = start == 0 ? start : (start + 2);
 
     string subs = text.substr(start, len);
-    cerr << "substring: '" << subs << "'" << endl;
+    //cerr << "substring: '" << subs << "'" << endl;
 
     editor.flashText(start, end);
 
     return subs;
+}
+
+void ofApp::inputLineEvent(const string& line) {
+    appendReplBuffer(line, INPUT);
+}
+
+void ofApp::outputLineEvent(const string& line) {
+    appendReplBuffer(line, OUTPUT);
+}
+
+void ofApp::errorLineEvent(const string& line) {
+    appendReplBuffer(line, ERROR);
+}
+
+void ofApp::appendReplBuffer(const string& line, const EventType type) {
+    if (replBufferSize > MAX_REPL_LINES) {
+        replBuffer.pop_front();
+    } else {
+        replBufferSize++;
+    }
+    replBuffer.push_back(make_pair(type, line));
 }
