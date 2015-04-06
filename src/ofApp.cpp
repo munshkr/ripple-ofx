@@ -13,32 +13,16 @@ void ofApp::setup() {
 
     // white text with gray shadow, on black background
     ofBackground(0);
-    editor.getSettings().setTextShadowColor(ofColor::gray);
+    //editor.getSettings().setTextShadowColor(ofColor::gray);
 
-    // tidal syntax
-    tidalSyntax.setWord("$", ofxEditorSyntax::KEYWORD);
-    tidalSyntax.setWord("|+|", ofxEditorSyntax::KEYWORD);
-    tidalSyntax.setWord("<$>", ofxEditorSyntax::KEYWORD);
-    tidalSyntax.setWord("<*>", ofxEditorSyntax::KEYWORD);
-    tidalSyntax.setWord("sound", ofxEditorSyntax::FUNCTION);
-    tidalSyntax.setSingleLineComment("--");
-    tidalSyntax.setMultiLineComment("{-", "-}");
-    for (int i = 1; i < 10; i++) {
-        tidalSyntax.setWord("d" + ofToString(i), ofxEditorSyntax::KEYWORD);
-    }
-    editor.getSettings().setLangSyntax("Tidal", &tidalSyntax);
-
-    // tidal highlighter colors
-    colorScheme.setStringColor(ofColor::yellow);
-    colorScheme.setNumberColor(ofColor::orangeRed);
-    colorScheme.setCommentColor(ofColor::gray);
-    colorScheme.setKeywordColor(ofColor::fuchsia);
-    colorScheme.setTypenameColor(ofColor::red);
-    colorScheme.setFunctionColor(ofColor::green);
+    // setup color scheme via xml file
+    colorScheme.loadFile("colorScheme.xml");
     editor.setColorScheme(&colorScheme);
 
-    // associate .tidal with Tidal
-    editor.getSettings().setFileExtLang("tidal", "Tidal");
+    // setup Tidal syntax via xml file
+    syntax.loadFile("tidalSyntax.xml");
+    editor.getSettings().addSyntax(&syntax);
+    editor.getSettings().printSyntaxes();
 
     editor.setAutoFocus(true);
 

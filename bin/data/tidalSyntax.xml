@@ -1,0 +1,23 @@
+<syntax>
+  <lang>Tidal</lang>
+  <files>
+    <ext>tidal</ext>
+  </files>
+  <singlecomment>--</singlecomment>
+  <multicomment>
+    <begin>{-</begin>
+    <end>-}</end>
+  </multicomment>
+  <preprocessor>#</preprocessor>
+  <operator>+-*/!|&amp;^~</operator>
+  <punctuation>;:,?</punctuation>
+  <words>
+    <keyword>$</keyword>
+    <keyword>|+|</keyword>
+
+    <function>sound</function>
+    <function>every</function>
+    <function>density</function>
+    <function>slow</function>
+  </words>
+</syntax>
