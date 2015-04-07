@@ -111,16 +111,6 @@ void ofApp::keyPressed(int key) {
             case 'w':
                 ofxEditor::setTextShadow(!ofxEditor::getTextShadow());
                 return;
-            case '1':
-                ofLogNotice() << "current line: " << editor.getCurrentLine() <<    " pos: " << editor.getCurrentLinePos();
-                editor.setCurrentLinePos(1, 5);
-                ofLogNotice() << "current line: " << editor.getCurrentLine() <<    " pos: " << editor.getCurrentLinePos();
-                break;
-            case '2':
-                ofLogNotice() << "current line: " << editor.getCurrentLine() <<    " pos: " << editor.getCurrentLinePos();
-                editor.setCurrentLinePos(5, 2);
-                ofLogNotice() << "current line: " << editor.getCurrentLine() <<    " pos: " << editor.getCurrentLinePos();
-                break;
         }
     }
     editor.keyPressed(key);
