@@ -1,6 +1,6 @@
 #include "ofApp.h"
 
-const unsigned int MAX_REPL_LINES = 70;
+const unsigned int OUTPUT_FONT_SIZE = 12;
 
 void ofApp::setup() {
     replBufferSize = 0;
@@ -43,19 +43,19 @@ void ofApp::setup() {
 }
 
 void ofApp::draw() {
-    list< pair<EventType, string> >::const_iterator it = replBuffer.begin();
-    for (int y = 0; it != replBuffer.end(); it++, y += 10) {
-        const EventType type = it->first;
+    list< pair<TidalRepl::EventType, string> >::const_iterator it = replBuffer.begin();
+    for (int y = 0; it != replBuffer.end(); it++, y += OUTPUT_FONT_SIZE) {
+        const TidalRepl::EventType type = it->first;
         const string &line = it->second;
 
         switch (type) {
-          case OUTPUT:
+          case TidalRepl::INPUT:
+            ofSetColor(0, 64, 0);
+            break;
+          case TidalRepl::OUTPUT:
             ofSetColor(64);
             break;
-          case INPUT:
-            ofSetColor(0, 127, 0);
-            break;
-          case ERROR:
+          case TidalRepl::ERROR:
             ofSetColor(127, 0, 0);
             break;
         }
@@ -69,7 +69,6 @@ void ofApp::draw() {
         ofSetColor(255);
         ofDrawBitmapString("fps: " + ofToString((int) ofGetFrameRate()), ofGetWidth() - 70, ofGetHeight() - 10);
     }
-
 }
 
 void ofApp::update() {
@@ -136,12 +135,10 @@ void ofApp::executeScript() {
     if (selection) {
         editor.flashSelection();
         const string &s = editor.getText();
-        repl.eval(s, false);
-        inputLineEvent(s);
+        repl.eval(s);
     } else {
         const string &s = getParagraph();
-        repl.eval(":{\n" + s + "\n:}", false);
-        inputLineEvent(s);
+        repl.eval(":{\n" + s + "\n:}");
     }
 }
 
@@ -167,19 +164,19 @@ string ofApp::getParagraph() {
 }
 
 void ofApp::inputLineEvent(const string& line) {
-    appendReplBuffer(line, INPUT);
+    appendReplBuffer(line, TidalRepl::INPUT);
 }
 
 void ofApp::outputLineEvent(const string& line) {
-    appendReplBuffer(line, OUTPUT);
+    appendReplBuffer(line, TidalRepl::OUTPUT);
 }
 
 void ofApp::errorLineEvent(const string& line) {
-    appendReplBuffer(line, ERROR);
+    appendReplBuffer(line, TidalRepl::ERROR);
 }
 
-void ofApp::appendReplBuffer(const string& line, const EventType type) {
-    if (replBufferSize > MAX_REPL_LINES) {
+void ofApp::appendReplBuffer(const string& line, const TidalRepl::EventType type) {
+    if (replBufferSize > ofGetHeight() / OUTPUT_FONT_SIZE) {
         replBuffer.pop_front();
     } else {
         replBufferSize++;

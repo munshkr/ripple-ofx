@@ -28,6 +28,8 @@ const int WRITE_FD = 1;
 const int TV_SEC  = 0;
 const int TV_USEC = 10000;
 
+const string NEWLINE = "\n";
+
 #define PARENT_READ_FD  ( pipes[PARENT_READ_PIPE][READ_FD]   )
 #define PARENT_WRITE_FD ( pipes[PARENT_WRITE_PIPE][WRITE_FD] )
 #define PARENT_ERROR_FD ( pipes[PARENT_ERROR_PIPE][READ_FD]  )
@@ -68,7 +70,7 @@ void TidalRepl::eval(string s, bool print) {
     if (res == -1) perror("write");
 
     if (print) {
-        emitInput(s);
+        emit(sn, INPUT);
         cout << "\e[33m" << s << "\e[0m" << endl;
     }
 }
@@ -104,7 +106,7 @@ void TidalRepl::readAsync() {
                 cerr << "stdout IO error" << endl;
             } else {
                 buf[count] = 0;
-                emitOutput(buf);
+                emit(buf, OUTPUT);
                 cout << "\e[32m" << buf << "\e[0m";
             }
         }
@@ -116,7 +118,7 @@ void TidalRepl::readAsync() {
                 cerr << "stderr IO error" << endl;
             } else {
                 buf[count] = 0;
-                emitError(buf);
+                emit(buf, ERROR);
                 cout << "\e[31m" << buf << "\e[0m";
             }
         }
@@ -191,29 +193,44 @@ void TidalRepl::forkExec() {
     }
 }
 
-inline void TidalRepl::emitInput(const string &s) {
+void TidalRepl::emit(const string &str, const EventType type) {
     if (!listener) return;
 
-    istringstream iss(s);
-    for (string line; getline(iss, line); ) {
+    string::size_type pos, lastPos = 0;
+
+    const string s = lastLine + str;
+    lastLine.erase();
+
+    while (true) {
+        pos = s.find_first_of(NEWLINE, lastPos);
+
+        if (pos == string::npos) {
+            pos = s.length();
+            if (pos != lastPos) lastLine = s.substr(lastPos, pos - lastPos);
+            break;
+        } else {
+            if (pos != lastPos) {
+                const string line = s.substr(lastPos, pos - lastPos);
+                emitLine(line, type);
+            }
+        }
+
+        lastPos = pos + 1;
+    }
+}
+
+void TidalRepl::emitLine(const string& line, const EventType type) {
+    if (!listener) return;
+
+    switch (type) {
+      case INPUT:
         listener->inputLineEvent(line);
-    }
-}
-
-inline void TidalRepl::emitOutput(const string &s) {
-    if (!listener) return;
-
-    istringstream iss(s);
-    for (string line; getline(iss, line); ) {
+        break;
+      case OUTPUT:
         listener->outputLineEvent(line);
-    }
-}
-
-inline void TidalRepl::emitError(const string &s) {
-    if (!listener) return;
-
-    istringstream iss(s);
-    for (string line; getline(iss, line); ) {
+        break;
+      case ERROR:
         listener->errorLineEvent(line);
+        break;
     }
 }

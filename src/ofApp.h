@@ -4,8 +4,6 @@
 #include "ofxEditor.h"
 #include "TidalRepl.h"
 
-enum EventType { INPUT, OUTPUT, ERROR };
-
 class ofApp : public ofBaseApp, TidalReplListener {
     public:
         void setup();
@@ -28,9 +26,9 @@ class ofApp : public ofBaseApp, TidalReplListener {
         void setTidalSyntax(ofxEditorColorScheme &scheme);
         string getParagraph();
         void executeScript();
-        void appendReplBuffer(const string& line, const EventType type);
+        void appendReplBuffer(const string& line, const TidalRepl::EventType type);
 
         TidalRepl repl;
-        list< pair<EventType, string> > replBuffer;
+        list< pair<TidalRepl::EventType, string> > replBuffer;
         unsigned int replBufferSize;
 };

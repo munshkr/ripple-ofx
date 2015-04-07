@@ -2,7 +2,7 @@
 
 #include <string>
 
-#define BUFFER_SIZE 4096
+#define BUFFER_SIZE 64
 
 using namespace std;
 
@@ -20,6 +20,8 @@ class TidalReplListener {
 
 class TidalRepl {
     public:
+        enum EventType { INPUT, OUTPUT, ERROR };
+
         TidalRepl();
         TidalRepl(TidalReplListener* listener);
         ~TidalRepl();
@@ -53,13 +55,13 @@ class TidalRepl {
         // Fork process and make child execute REPL
         void forkExec();
 
-        inline void emitInput(const string &s);
-        inline void emitOutput(const string &s);
-        inline void emitError(const string &s);
+        void emit(const string &s, const EventType type);
+        void emitLine(const string &line, const EventType type);
 
         // Determines
         bool running;
         int replPid;
         char buf[BUFFER_SIZE];
         int pipes[3][2];
+        string lastLine;
 };
