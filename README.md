@@ -16,7 +16,11 @@ openFrameworks path, by default it is `/opt/of`.
 ## Dependencies
 
   - [openFrameworks 0.8.4](http://openframeworks.cc/download/)
-  - [ofxGLEditor](https://github.com/Akira-Hayasaka/ofxGLEditor) addon
+  - [ofxGLEditor](https://github.com/munshkr/ofxGLEditor) addon (munshkr fork)
+
+Builds are made against
+[munshkr/ofxGLEditor](https://github.com/munshkr/ofxGLEditor) instead of the
+official repo for now, as it's still unstable too and API might change.
 
 ## Usage
 
