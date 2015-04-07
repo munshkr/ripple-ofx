@@ -71,7 +71,7 @@ void TidalRepl::eval(string s, bool print) {
 
     if (print) {
         emit(sn, INPUT);
-        cout << "\e[33m" << s << "\e[0m" << endl;
+        cout << "\e[32m" << s << "\e[0m" << endl;
     }
 }
 
@@ -107,7 +107,7 @@ void TidalRepl::readAsync() {
             } else {
                 buf[count] = 0;
                 emit(buf, OUTPUT);
-                cout << "\e[32m" << buf << "\e[0m";
+                cout << "\e[0m" << buf;
             }
         }
 
