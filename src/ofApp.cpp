@@ -4,6 +4,7 @@ const unsigned int OUTPUT_FONT_SIZE = 12;
 
 void ofApp::setup() {
     replBufferSize = 0;
+    debug = false;
 
     ofSetVerticalSync(true);
 
@@ -30,38 +31,20 @@ void ofApp::setup() {
 
     editor.setAutoFocus(true);
 
+    setReplBuffer(true);
+
     // open a file by default
     //ofFile testFile;
     //testFile.open("hi.tidal", ofFile::ReadOnly);
     //editor.setText(testFile.readToBuffer().getText());
     //ofLogNotice() << "num chars: " << editor.getNumCharacters() << " num lines: " << editor.getNumLines();
 
-    debug = false;
-
     repl.setListener(this);
     repl.start("data/boot.hss");
 }
 
 void ofApp::draw() {
-    list< pair<TidalRepl::EventType, string> >::const_iterator it = replBuffer.begin();
-    for (int y = 0; it != replBuffer.end(); it++, y += OUTPUT_FONT_SIZE) {
-        const TidalRepl::EventType type = it->first;
-        const string &line = it->second;
-
-        switch (type) {
-          case TidalRepl::INPUT:
-            ofSetColor(0, 64, 0);
-            break;
-          case TidalRepl::OUTPUT:
-            ofSetColor(64);
-            break;
-          case TidalRepl::ERROR:
-            ofSetColor(127, 0, 0);
-            break;
-        }
-
-        ofDrawBitmapString(line, 0, y);
-    }
+    if (showReplBuffer) drawReplBuffer();
 
     editor.draw();
 
@@ -108,8 +91,8 @@ void ofApp::keyPressed(int key) {
             case 'z':
                 editor.setAutoFocus(!editor.getAutoFocus());
                 return;
-            case 'w':
-                ofxEditor::setTextShadow(!ofxEditor::getTextShadow());
+            case 'o':
+                setReplBuffer(!getReplBuffer());
                 return;
         }
     }
@@ -118,6 +101,14 @@ void ofApp::keyPressed(int key) {
 
 void ofApp::windowResized(int w, int h) {
     editor.resize(w, h);
+}
+
+void ofApp::setReplBuffer(bool value) {
+    showReplBuffer = value;
+}
+
+bool ofApp::getReplBuffer() const {
+    return showReplBuffer;
 }
 
 void ofApp::executeScript() {
@@ -172,4 +163,26 @@ void ofApp::appendReplBuffer(const string& line, const TidalRepl::EventType type
         replBufferSize++;
     }
     replBuffer.push_back(make_pair(type, line));
+}
+
+void ofApp::drawReplBuffer() {
+    list< pair<TidalRepl::EventType, string> >::const_iterator it = replBuffer.begin();
+    for (int y = 0; it != replBuffer.end(); it++, y += OUTPUT_FONT_SIZE) {
+        const TidalRepl::EventType type = it->first;
+        const string &line = it->second;
+
+        switch (type) {
+          case TidalRepl::INPUT:
+            ofSetColor(0, 64, 0);
+            break;
+          case TidalRepl::OUTPUT:
+            ofSetColor(64);
+            break;
+          case TidalRepl::ERROR:
+            ofSetColor(127, 0, 0);
+            break;
+        }
+
+        ofDrawBitmapString(line, 0, y);
+    }
 }

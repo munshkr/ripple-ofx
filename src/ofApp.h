@@ -12,6 +12,8 @@ class ofApp : public ofBaseApp, TidalReplListener {
 
         void keyPressed(int key);
         void windowResized(int w, int h);
+        void setReplBuffer(bool value);
+        bool getReplBuffer() const;
 
         ofxEditor editor;
         ofxEditorColorScheme colorScheme;
@@ -27,8 +29,11 @@ class ofApp : public ofBaseApp, TidalReplListener {
         string getParagraph();
         void executeScript();
         void appendReplBuffer(const string& line, const TidalRepl::EventType type);
+        void drawReplBuffer();
 
         TidalRepl repl;
+
         list< pair<TidalRepl::EventType, string> > replBuffer;
         unsigned int replBufferSize;
+        bool showReplBuffer;
 };

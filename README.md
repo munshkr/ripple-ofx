@@ -11,12 +11,12 @@ Refer to the official OF setup instructions for your operating system.
 To install the addons, clone them on `addons/` inside your OF root directory.
 
 You might have to update the `OF_ROOT` variable in `config.make` to your
-openFrameworks path, by default it is `/opt/of`.
+openFrameworks path, by default it's `/opt/of`.
 
 ## Dependencies
 
   - [openFrameworks 0.8.4](http://openframeworks.cc/download/)
-  - [ofxGLEditor](https://github.com/munshkr/ofxGLEditor) addon (munshkr fork)
+  - [ofxGLEditor](https://github.com/munshkr/ofxGLEditor) addon
 
 Builds are made against
 [munshkr/ofxGLEditor](https://github.com/munshkr/ofxGLEditor) instead of the
@@ -26,8 +26,8 @@ official repo for now, as it's still unstable too and API might change.
 
   - `ctrl + e`: Evaluate current paragraph or selected text
   - `ctrl + q`: Exit Ripple
-  - `ctrl + s`: Enable/disable syntax highlighting
-  - `ctrl + f`: Enable/disable fullscreen mode
-  - `ctrl + n`: Enable/disable line numbers
-  - `ctrl + z`: Enable/disable auto focus
-  - `ctrl + w`: Enable/disable text shadow
+  - `ctrl + s`: Toggle syntax highlighting
+  - `ctrl + f`: Toggle fullscreen
+  - `ctrl + n`: Toggle line numbers
+  - `ctrl + z`: Toggle auto focus
+  - `ctrl + o`: Toggle REPL output buffer
