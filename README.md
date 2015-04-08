@@ -31,3 +31,7 @@ official repo for now, as it's still unstable too and API might change.
   - `ctrl + n`: Toggle line numbers
   - `ctrl + z`: Toggle auto focus
   - `ctrl + o`: Toggle REPL output buffer
+
+## License
+
+Ripple is released with GPL version 3.  Please refer to the LICENSE file.
