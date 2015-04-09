@@ -5,6 +5,8 @@ An OpenGL editor for [Tidal](http://tidalcycles.github.io/).  Inspired in
 [(fluxus)](http://www.pawfal.org/fluxus/) and written in
 [openframeworks](http://openframeworks.cc/).
 
+![screenshot](http://i.imgur.com/U2gPoNv.png)
+
 ## Install
 
 Refer to the official OF setup instructions for your operating system.
