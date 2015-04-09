@@ -25,12 +25,12 @@ official repo for now, as it's still unstable too and API might change.
 ## Usage
 
   - `ctrl + e`: Evaluate current paragraph or selected text
-  - `ctrl + q`: Exit Ripple
   - `ctrl + s`: Toggle syntax highlighting
   - `ctrl + f`: Toggle fullscreen
   - `ctrl + n`: Toggle line numbers
   - `ctrl + z`: Toggle auto focus
   - `ctrl + o`: Toggle REPL output buffer
+  - `ctrl + q`: Exit Ripple
 
 ## License
 
