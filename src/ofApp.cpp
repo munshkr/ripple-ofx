@@ -137,7 +137,7 @@ string ofApp::getParagraph() {
     start = start == 0 ? start : (start + 2);
 
     string subs = text.substr(start, len);
-    //cerr << "substring: '" << subs << "'" << endl;
+    //ofLog() << "substring: '" << subs << "'";
 
     editor.flashText(start, end);
 

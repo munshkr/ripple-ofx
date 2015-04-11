@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include <ofLog.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/time.h>
@@ -58,14 +59,12 @@ TidalRepl::~TidalRepl() {
         close(PARENT_READ_FD);
         close(PARENT_WRITE_FD);
         close(PARENT_ERROR_FD);
-
-        cout << "\e[0m" << endl;
     }
 }
 
 void TidalRepl::eval(string s, bool print) {
     if (!running) {
-        cerr << "REPL is not running" << endl;
+        ofLogError() << "TidalRepl: GHCI is not running";
         return;
     }
 
@@ -75,13 +74,13 @@ void TidalRepl::eval(string s, bool print) {
 
     if (print) {
         emit(sn, INPUT);
-        cout << "\e[32m" << s << "\e[0m" << endl;
+        ofLogVerbose() << "TidalRepl: [INPUT] " << s;
     }
 }
 
 void TidalRepl::readAsync() {
     if (!running) {
-        cerr << "REPL is not running" << endl;
+        ofLogError() << "TidalRepl: GHCI is not running";
         return;
     }
 
@@ -107,11 +106,11 @@ void TidalRepl::readAsync() {
             // Read from child’s stdout
             int count = read(PARENT_READ_FD, buf, BUFFER_SIZE);
             if (count == -1) {
-                cerr << "stdout IO error" << endl;
+                ofLogError() << "TidalRepl: stdout IO error";
             } else {
                 buf[count] = 0;
                 emit(buf, OUTPUT);
-                cout << "\e[0m" << buf;
+                ofLogVerbose() << "TidalRepl: [OUTPUT] " << buf;
             }
         }
 
@@ -119,11 +118,11 @@ void TidalRepl::readAsync() {
             // Read from child’s stderr
             int count = read(PARENT_ERROR_FD, buf, BUFFER_SIZE);
             if (count == -1) {
-                cerr << "stderr IO error" << endl;
+                ofLogError() << "TidalRepl: stderr IO error";
             } else {
                 buf[count] = 0;
                 emit(buf, ERROR);
-                cout << "\e[31m" << buf << "\e[0m";
+                ofLogVerbose() << "TidalRepl: [ERROR] " << buf;
             }
         }
     }
@@ -145,7 +144,7 @@ void TidalRepl::start(const string& bootPath) {
         f_buf << f.rdbuf();
         eval(f_buf.str(), false);
     } else {
-        cerr << "Unable to open bootstrap file at " << bootPath << endl;
+        ofLogWarning() << "TidalRepl: Unable to open bootstrap file at " << bootPath;
     }
 }
 
@@ -212,17 +211,22 @@ void TidalRepl::forkExec() {
         close(PARENT_ERROR_FD);
 
         const string ghciArg = "-XOverloadedStrings";
-        char* argv[] = { (char*) ghciPath.c_str(), (char*) ghciArg.c_str(), 0 };
 
-        setenv("TIDAL_TEMPO_IP", tidalHost.c_str(), 1);
+        char* argv[] = {
+            const_cast<char*>(ghciPath.c_str()),
+            const_cast<char*>(ghciArg.c_str()),
+            0
+        };
 
         ostringstream port;
         port << tidalPort;
-        setenv("TIDAL_TEMPO_PORT", port.str().c_str(), 1);
 
+        setenv("TIDAL_TEMPO_IP", tidalHost.c_str(), 1);
+        setenv("TIDAL_TEMPO_PORT", port.str().c_str(), 1);
         execv(argv[0], argv);
 
-        cerr << "Failed to execute " << argv[0] << endl;
+        ofLogError() << "TidalRepl: Failed to execute " << argv[0];
+
     } else { // parent
         // Close fds not required by parent
         close(CHILD_READ_FD);
