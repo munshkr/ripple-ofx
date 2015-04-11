@@ -30,6 +30,11 @@ const int TV_USEC = 10000;
 
 const string NEWLINE = "\n";
 
+const string DEFAULT_GHCI_PATH = "/usr/bin/ghci";
+
+const string DEFAULT_TIDAL_HOST = "127.0.0.1";
+const unsigned int DEFAULT_TIDAL_PORT = 9160;
+
 #define PARENT_READ_FD  ( pipes[PARENT_READ_PIPE][READ_FD]   )
 #define PARENT_WRITE_FD ( pipes[PARENT_WRITE_PIPE][WRITE_FD] )
 #define PARENT_ERROR_FD ( pipes[PARENT_ERROR_PIPE][READ_FD]  )
@@ -41,10 +46,9 @@ const string NEWLINE = "\n";
 
 TidalRepl::TidalRepl() {
     listener = NULL;
-}
-
-TidalRepl::TidalRepl(TidalReplListener* lst) {
-    listener = lst;
+    ghciPath = DEFAULT_GHCI_PATH;
+    tidalHost = DEFAULT_TIDAL_HOST;
+    tidalPort = DEFAULT_TIDAL_PORT;
 }
 
 TidalRepl::~TidalRepl() {
@@ -157,6 +161,30 @@ TidalReplListener* TidalRepl::getListener() const {
     return listener;
 }
 
+void TidalRepl::setGhciPath(const string &path) {
+    ghciPath = path;
+}
+
+string TidalRepl::getGhciPath() const {
+    return ghciPath;
+}
+
+void TidalRepl::setTidalHost(const string &host) {
+    tidalHost = host;
+}
+
+string TidalRepl::getTidalHost() const {
+    return tidalHost;
+}
+
+void TidalRepl::setTidalPort(unsigned int port) {
+    tidalPort = port;
+}
+
+unsigned int TidalRepl::getTidalPort() const {
+    return tidalPort;
+}
+
 void TidalRepl::initPipes() {
     for (int i = 0; i < NUM_PIPES; i++) {
         if (pipe(pipes[i]) == -1) {
@@ -183,8 +211,18 @@ void TidalRepl::forkExec() {
         close(PARENT_WRITE_FD);
         close(PARENT_ERROR_FD);
 
-        char* argv[] = { "/usr/bin/ghci", "-XOverloadedStrings", 0 };
+        const string ghciArg = "-XOverloadedStrings";
+        char* argv[] = { (char*) ghciPath.c_str(), (char*) ghciArg.c_str(), 0 };
+
+        setenv("TIDAL_TEMPO_IP", tidalHost.c_str(), 1);
+
+        ostringstream port;
+        port << tidalPort;
+        setenv("TIDAL_TEMPO_PORT", port.str().c_str(), 1);
+
         execv(argv[0], argv);
+
+        cerr << "Failed to execute " << argv[0] << endl;
     } else { // parent
         // Close fds not required by parent
         close(CHILD_READ_FD);

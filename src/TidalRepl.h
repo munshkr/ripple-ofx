@@ -23,7 +23,6 @@ class TidalRepl {
         enum EventType { INPUT, OUTPUT, ERROR };
 
         TidalRepl();
-        TidalRepl(TidalReplListener* listener);
         ~TidalRepl();
 
         // Start REPL process
@@ -41,9 +40,17 @@ class TidalRepl {
         // Decides if REPL process is running
         bool isRunning() const;
 
-        // Getter/setter of event listener
         void setListener(TidalReplListener* listener);
         TidalReplListener* getListener() const;
+
+        void setGhciPath(const string &path);
+        string getGhciPath() const;
+
+        void setTidalHost(const string &host);
+        string getTidalHost() const;
+
+        void setTidalPort(unsigned int port);
+        unsigned int getTidalPort() const;
 
     protected:
         TidalReplListener* listener;
@@ -58,10 +65,13 @@ class TidalRepl {
         void emit(const string &s, const EventType type);
         void emitLine(const string &line, const EventType type);
 
-        // Determines
         bool running;
         int replPid;
         char buf[BUFFER_SIZE];
         int pipes[3][2];
         string lastLine;
+
+        string ghciPath;
+        string tidalHost;
+        unsigned int tidalPort;
 };
