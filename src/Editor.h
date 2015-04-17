@@ -3,7 +3,7 @@
 #include "ofxEditor.h"
 #include "TidalRepl.h"
 
-class Editor : public TidalReplListener {
+class Editor : public ReplListener {
     public:
         Editor();
         virtual ~Editor();
@@ -29,13 +29,13 @@ class Editor : public TidalReplListener {
         void setReplBuffer(bool value);
         bool getReplBuffer() const;
 
-        // TidalRepl events
+        // REPL events
         void inputLineEvent(const string& line);
         void outputLineEvent(const string& line);
         void errorLineEvent(const string& line);
 
     private:
-        void appendReplBuffer(const string& line, const TidalRepl::EventType type);
+        void appendReplBuffer(const string& line, const Repl::EventType type);
         void drawReplBuffer();
 
         ofxEditor editor;
@@ -44,7 +44,7 @@ class Editor : public TidalReplListener {
 
         TidalRepl repl;
 
-        list< pair<TidalRepl::EventType, string> > replBuffer;
+        list< pair<Repl::EventType, string> > replBuffer;
         bool showReplBuffer;
         unsigned int replBufferSize;    // to avoid calling replBuffer.size(),
                                         // which is O(n) on some C++ implementations.

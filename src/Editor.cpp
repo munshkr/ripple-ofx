@@ -130,18 +130,18 @@ bool Editor::getReplBuffer() const {
 }
 
 void Editor::inputLineEvent(const string& line) {
-    appendReplBuffer(line, TidalRepl::INPUT);
+    appendReplBuffer(line, Repl::INPUT);
 }
 
 void Editor::outputLineEvent(const string& line) {
-    appendReplBuffer(line, TidalRepl::OUTPUT);
+    appendReplBuffer(line, Repl::OUTPUT);
 }
 
 void Editor::errorLineEvent(const string& line) {
-    appendReplBuffer(line, TidalRepl::ERROR);
+    appendReplBuffer(line, Repl::ERROR);
 }
 
-void Editor::appendReplBuffer(const string& line, const TidalRepl::EventType type) {
+void Editor::appendReplBuffer(const string& line, const Repl::EventType type) {
     if (replBufferSize > ofGetHeight() / OUTPUT_FONT_SIZE) {
         replBuffer.pop_front();
     } else {
@@ -151,19 +151,19 @@ void Editor::appendReplBuffer(const string& line, const TidalRepl::EventType typ
 }
 
 void Editor::drawReplBuffer() {
-    list< pair<TidalRepl::EventType, string> >::const_iterator it = replBuffer.begin();
+    list< pair<Repl::EventType, string> >::const_iterator it = replBuffer.begin();
     for (int y = 0; it != replBuffer.end(); it++, y += OUTPUT_FONT_SIZE) {
-        const TidalRepl::EventType type = it->first;
+        const Repl::EventType type = it->first;
         const string &line = it->second;
 
         switch (type) {
-          case TidalRepl::INPUT:
+          case Repl::INPUT:
             ofSetColor(0, 64, 0);
             break;
-          case TidalRepl::OUTPUT:
+          case Repl::OUTPUT:
             ofSetColor(64);
             break;
-          case TidalRepl::ERROR:
+          case Repl::ERROR:
             ofSetColor(127, 0, 0);
             break;
         }
