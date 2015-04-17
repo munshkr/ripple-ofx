@@ -6,8 +6,7 @@ Editor::Editor() {
     replBufferSize = 0;
 }
 
-Editor::~Editor() {
-}
+Editor::~Editor() {}
 
 void Editor::setup() {
     // make sure to load editor font before anything else!
@@ -40,10 +39,14 @@ void Editor::setup() {
 
     repl.setListener(this);
     repl.start("data/boot.hss");
+
+    screpl.setListener(this);
+    screpl.start();
 }
 
 void Editor::update() {
     repl.readAsync();
+    screpl.readAsync();
 }
 
 void Editor::draw() {
@@ -65,6 +68,9 @@ void Editor::keyPressed(int key) {
                 return;
             case 'e':
                 executeScript();
+                return;
+            case 'r':
+                executeSuperColliderScript();
                 return;
             case 'l':
                 editor.setLineWrapping(!editor.getLineWrapping());
@@ -97,6 +103,18 @@ void Editor::executeScript() {
     } else {
         const string &s = getParagraph();
         repl.evalMulti(s);
+    }
+}
+
+void Editor::executeSuperColliderScript() {
+    bool selection = editor.isSelection();
+    if (selection) {
+        editor.flashSelection();
+        const string &s = editor.getText();
+        screpl.eval(s);
+    } else {
+        const string &s = getParagraph();
+        screpl.evalMulti(s);
     }
 }
 

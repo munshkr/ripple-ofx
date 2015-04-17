@@ -2,6 +2,7 @@
 
 #include "ofxEditor.h"
 #include "TidalRepl.h"
+#include "SuperColliderRepl.h"
 
 class Editor : public ReplListener {
     public:
@@ -24,6 +25,7 @@ class Editor : public ReplListener {
         // REPL evaluation
         string getParagraph();
         void executeScript();
+        void executeSuperColliderScript();
 
         // show/hide REPL output buffer
         void setReplBuffer(bool value);
@@ -43,6 +45,7 @@ class Editor : public ReplListener {
         ofxEditorSyntax syntax;
 
         TidalRepl repl;
+        SuperColliderRepl screpl;
 
         list< pair<Repl::EventType, string> > replBuffer;
         bool showReplBuffer;
