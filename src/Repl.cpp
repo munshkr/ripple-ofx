@@ -25,9 +25,9 @@ const int PARENT_ERROR_PIPE = 2;
 const int READ_FD  = 0;
 const int WRITE_FD = 1;
 
-// select() timeout
+// select() timeout (0 means no delay)
 const int TV_SEC  = 0;
-const int TV_USEC = 10000;
+const int TV_USEC = 0;
 
 const string NEWLINE = "\n";
 
@@ -125,7 +125,6 @@ void Repl::readAsync() {
     FD_SET(PARENT_READ_FD, &rfds);
     FD_SET(PARENT_ERROR_FD, &rfds);
 
-    // Timeout: 10000us, review if 0 is possible and doesn't hog the cpu
     tv.tv_sec = TV_SEC;
     tv.tv_usec = TV_USEC;
 

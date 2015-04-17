@@ -3,6 +3,7 @@
 void ofApp::setup() {
     debug = false;
 
+    ofSetFrameRate(60);
     ofSetVerticalSync(true);
 
     // handle ESC internally since we use it to exit selection
