@@ -13,6 +13,8 @@ class TidalRepl : public Repl {
         // Start REPL process and run bootload script
         void start(const string& bootPath);
 
+        void evalMulti(string s);
+
         void setGhciPath(const string &path);
         string getGhciPath() const;
 

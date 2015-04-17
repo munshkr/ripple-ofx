@@ -95,7 +95,7 @@ void Repl::start() {
     running = true;
 }
 
-void Repl::eval(string s, bool print) {
+void Repl::eval(string s) {
     if (!running) {
         ofLogError() << "Repl: Process is not running";
         return;
@@ -105,10 +105,12 @@ void Repl::eval(string s, bool print) {
     int res = write(PARENT_WRITE_FD, sn.c_str(), strlen(sn.c_str()));
     if (res == -1) perror("write");
 
-    if (print) {
-        emit(sn, INPUT);
-        ofLogVerbose() << "Repl: [INPUT] " << s;
-    }
+    emit(sn, INPUT);
+    ofLogVerbose() << "Repl: [INPUT] " << s;
+}
+
+void Repl::evalMulti(string s) {
+    eval(s);
 }
 
 void Repl::readAsync() {

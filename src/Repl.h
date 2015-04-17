@@ -30,7 +30,11 @@ class Repl {
         virtual void start();
 
         // Evaluate a string and emit input event
-        virtual void eval(string s, bool print=true);
+        virtual void eval(string s);
+
+        // Evaluate a string as multiline and emit input event
+        // Override if multiline expressions need to do something different
+        virtual void evalMulti(string s);
 
         // Read standard output and error from REPL process and emit events
         virtual void readAsync();

@@ -96,7 +96,7 @@ void Editor::executeScript() {
         repl.eval(s);
     } else {
         const string &s = getParagraph();
-        repl.eval(":{\n" + s + "\n:}");
+        repl.evalMulti(s);
     }
 }
 

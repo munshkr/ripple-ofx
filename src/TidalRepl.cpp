@@ -31,10 +31,14 @@ void TidalRepl::start(const string& bootPath) {
     if (f.is_open()) {
         stringstream f_buf;
         f_buf << f.rdbuf();
-        eval(f_buf.str(), false);
+        eval(f_buf.str());
     } else {
         ofLogWarning() << "TidalRepl: Unable to open bootstrap file at " << bootPath;
     }
+}
+
+void TidalRepl::evalMulti(string s) {
+    eval(":{\n" + s + "\n:}");
 }
 
 void TidalRepl::setGhciPath(const string &path) {

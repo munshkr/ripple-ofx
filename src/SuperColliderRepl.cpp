@@ -26,7 +26,7 @@ void SuperColliderRepl::start(const string& bootPath) {
     if (f.is_open()) {
         stringstream f_buf;
         f_buf << f.rdbuf();
-        eval(f_buf.str(), false);
+        eval(f_buf.str());
     } else {
         ofLogWarning() << "SuperColliderRepl: Unable to open bootstrap file at " << bootPath;
     }
