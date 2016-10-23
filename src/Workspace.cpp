@@ -1,43 +1,49 @@
 #include "Workspace.h"
 
-const unsigned int OUTPUT_FONT_SIZE = 12;
-
 Workspace::Workspace() {
     Editor* ed;
 
-    repl.setListener(this);
-    screpl.setListener(this);
+    // create log viewers for each REPL
+    this->replLog = new ReplLog(&repl);
+    //this->screplLog = new ReplLog(&screpl);
 
     // create Tidal editor
     ed = new Editor(&repl);
-    editors.push_back(ed);
+    this->editors.push_back(ed);
     ed->setup();
     repl.start("data/boot.hss");
 
     // create SC editor
-    ed = new Editor(&screpl);
-    editors.push_back(ed);
+    ed = new Editor(&repl);
+    this->editors.push_back(ed);
     ed->setup();
-    screpl.start();
+    repl.start();
 
-    currentEditor = 0;
-    showReplBuffer = true;
-    replBufferSize = 0;
+    this->currentEditor = 0;
+    this->showReplBuffer = true;
 }
 
 Workspace::~Workspace() {
-    editors.clear();
+    this->editors.clear();
+    delete this->replLog;
+    //delete this->screplLog;
 }
 
 void Workspace::draw() {
-    if (showReplBuffer) drawReplBuffer();
+    if (showReplBuffer) {
+        if (editors[currentEditor]->repl == &repl) {
+            replLog->draw();
+        } else {
+            screplLog->draw();
+        }
+    }
+
     editors[currentEditor]->draw();
 }
 
 void Workspace::update() {
-    repl.readAsync();
-    screpl.readAsync();
     editors[currentEditor]->update();
+    editors[currentEditor]->repl->readAsync();
 }
 
 void Workspace::keyPressed(int key) {
@@ -70,47 +76,4 @@ void Workspace::setReplBuffer(bool value) {
 
 bool Workspace::getReplBuffer() const {
     return showReplBuffer;
-}
-
-void Workspace::inputLineEvent(const string& line) {
-    appendReplBuffer(line, Repl::INPUT);
-}
-
-void Workspace::outputLineEvent(const string& line) {
-    appendReplBuffer(line, Repl::OUTPUT);
-}
-
-void Workspace::errorLineEvent(const string& line) {
-    appendReplBuffer(line, Repl::ERROR);
-}
-
-void Workspace::appendReplBuffer(const string& line, const Repl::EventType type) {
-    if (replBufferSize > ofGetHeight() / OUTPUT_FONT_SIZE) {
-        replBuffer.pop_front();
-    } else {
-        replBufferSize++;
-    }
-    replBuffer.push_back(make_pair(type, line));
-}
-
-void Workspace::drawReplBuffer() {
-    list< pair<Repl::EventType, string> >::const_iterator it = replBuffer.begin();
-    for (int y = 0; it != replBuffer.end(); it++, y += OUTPUT_FONT_SIZE) {
-        const Repl::EventType type = it->first;
-        const string &line = it->second;
-
-        switch (type) {
-          case Repl::INPUT:
-            ofSetColor(0, 64, 0);
-            break;
-          case Repl::OUTPUT:
-            ofSetColor(64);
-            break;
-          case Repl::ERROR:
-            ofSetColor(127, 0, 0);
-            break;
-        }
-
-        ofDrawBitmapString(line, 0, y);
-    }
 }

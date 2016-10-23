@@ -21,10 +21,10 @@ class Editor {
         string getParagraph();
         void executeScript();
 
+        Repl* repl;
+
     private:
         ofxEditor editor;
         ofxEditorColorScheme colorScheme;
         ofxEditorSyntax syntax;
-
-        Repl* repl;
 };

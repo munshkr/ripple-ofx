@@ -2,10 +2,11 @@
 
 #include "Editor.h"
 #include "Repl.h"
+#include "ReplLog.h"
 #include "TidalRepl.h"
 #include "SuperColliderRepl.h"
 
-class Workspace : public ReplListener {
+class Workspace {
     public:
         Workspace();
         virtual ~Workspace();
@@ -19,26 +20,17 @@ class Workspace : public ReplListener {
         void setReplBuffer(bool value);
         bool getReplBuffer() const;
 
-        // REPL events
-        void inputLineEvent(const string& line);
-        void outputLineEvent(const string& line);
-        void errorLineEvent(const string& line);
-
     private:
-        void appendReplBuffer(const string& line, const Repl::EventType type);
-        void drawReplBuffer();
-
         // REPLs
         TidalRepl repl;
         SuperColliderRepl screpl;
+
+        ReplLog* replLog;
+        ReplLog* screplLog;
 
         // editors
         vector<Editor*> editors;
         unsigned int currentEditor;
 
-        // REPL-related vars
-        list< pair<Repl::EventType, string> > replBuffer;
         bool showReplBuffer;
-        unsigned int replBufferSize;    // to avoid calling replBuffer.size(),
-                                        // which is O(n) on some C++ implementations.
 };
