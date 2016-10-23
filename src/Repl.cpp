@@ -12,6 +12,7 @@
 #include <sys/wait.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <sys/prctl.h>
 #include <signal.h>
 
 
@@ -63,6 +64,8 @@ void Repl::start() {
         }
     }
 
+    pid_t ppidBeforeFork = getpid();
+
     // Fork process
     replPid = fork();
 
@@ -79,6 +82,14 @@ void Repl::start() {
         close(PARENT_READ_FD);
         close(PARENT_WRITE_FD);
         close(PARENT_ERROR_FD);
+
+        // Ask kernel to send child a SIGTERM if parent dies
+        int r = prctl(PR_SET_PDEATHSIG, SIGTERM);
+        if (r == -1) { perror("prctl"); exit(1); }
+
+        // Test in case the original parent exited just
+        // before the prctl() call because of a race condition
+        if (getppid() != ppidBeforeFork) { exit(1); }
 
         execProcess();
 
