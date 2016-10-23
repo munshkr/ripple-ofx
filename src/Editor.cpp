@@ -29,7 +29,7 @@ void Editor::setup() {
 
     editor.setAutoFocus(true);
 
-    setReplBuffer(true);
+    //setReplBuffer(true);
 
     // open a file by default
     //ofFile testFile;
@@ -37,20 +37,20 @@ void Editor::setup() {
     //editor.setText(testFile.readToBuffer().getText());
     //ofLogNotice() << "num chars: " << editor.getNumCharacters() << " num lines: " << editor.getNumLines();
 
-    repl.setListener(this);
-    repl.start("data/boot.hss");
+    //repl.setListener(this);
+    //repl.start("data/boot.hss");
 
-    screpl.setListener(this);
-    screpl.start();
+    //screpl.setListener(this);
+    //screpl.start();
 }
 
 void Editor::update() {
-    repl.readAsync();
-    screpl.readAsync();
+    //repl.readAsync();
+    //screpl.readAsync();
 }
 
 void Editor::draw() {
-    if (showReplBuffer) drawReplBuffer();
+    //if (showReplBuffer) drawReplBuffer();
     editor.draw();
 }
 
