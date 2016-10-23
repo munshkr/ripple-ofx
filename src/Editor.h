@@ -3,18 +3,14 @@
 #include "ofxEditor.h"
 #include "Repl.h"
 
-class Editor : public ReplListener {
+class Editor {
     public:
         Editor(Repl* repl);
         virtual ~Editor();
 
         void setup();
-
         void update();
-
-        /// draw the editor over the current viewport
         void draw();
-
         void keyPressed(int key);
 
         /// reshape the drawing area
@@ -24,29 +20,11 @@ class Editor : public ReplListener {
         // REPL evaluation
         string getParagraph();
         void executeScript();
-        void executeSuperColliderScript();
-
-        // show/hide REPL output buffer
-        void setReplBuffer(bool value);
-        bool getReplBuffer() const;
-
-        // REPL events
-        void inputLineEvent(const string& line);
-        void outputLineEvent(const string& line);
-        void errorLineEvent(const string& line);
 
     private:
-        void appendReplBuffer(const string& line, const Repl::EventType type);
-        void drawReplBuffer();
-
         ofxEditor editor;
         ofxEditorColorScheme colorScheme;
         ofxEditorSyntax syntax;
 
         Repl* repl;
-
-        list< pair<Repl::EventType, string> > replBuffer;
-        bool showReplBuffer;
-        unsigned int replBufferSize;    // to avoid calling replBuffer.size(),
-                                        // which is O(n) on some C++ implementations.
 };
