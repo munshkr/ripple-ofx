@@ -1,12 +1,11 @@
 #pragma once
 
 #include "ofxEditor.h"
-#include "TidalRepl.h"
-#include "SuperColliderRepl.h"
+#include "Repl.h"
 
 class Editor : public ReplListener {
     public:
-        Editor();
+        Editor(Repl* repl);
         virtual ~Editor();
 
         void setup();
@@ -44,8 +43,7 @@ class Editor : public ReplListener {
         ofxEditorColorScheme colorScheme;
         ofxEditorSyntax syntax;
 
-        TidalRepl repl;
-        SuperColliderRepl screpl;
+        Repl* repl;
 
         list< pair<Repl::EventType, string> > replBuffer;
         bool showReplBuffer;

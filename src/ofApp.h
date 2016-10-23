@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Editor.h"
+#include "Workspace.h"
 
 class ofApp : public ofBaseApp {
     public:
@@ -15,5 +15,5 @@ class ofApp : public ofBaseApp {
         bool debug; //< show grid and fps?
 
     private:
-        Editor editor;
+        Workspace workspace;
 };

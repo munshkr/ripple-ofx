@@ -8,12 +8,10 @@ void ofApp::setup() {
 
     // handle ESC internally since we use it to exit selection
     ofSetEscapeQuitsApp(false);
-
-    editor.setup();
 }
 
 void ofApp::draw() {
-    editor.draw();
+    workspace.draw();
 
     if (debug) {
         ofSetColor(255);
@@ -22,7 +20,7 @@ void ofApp::draw() {
 }
 
 void ofApp::update() {
-    editor.update();
+    workspace.update();
 }
 
 void ofApp::keyPressed(int key) {
@@ -42,9 +40,9 @@ void ofApp::keyPressed(int key) {
         }
     }
 
-    editor.keyPressed(key);
+    workspace.keyPressed(key);
 }
 
 void ofApp::windowResized(int w, int h) {
-    editor.resize(w, h);
+    workspace.resize(w, h);
 }

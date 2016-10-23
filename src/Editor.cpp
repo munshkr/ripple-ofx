@@ -2,7 +2,8 @@
 
 const unsigned int OUTPUT_FONT_SIZE = 12;
 
-Editor::Editor() {
+Editor::Editor(Repl* repl) {
+    repl = repl;
     replBufferSize = 0;
 }
 
@@ -69,9 +70,6 @@ void Editor::keyPressed(int key) {
             case 'e':
                 executeScript();
                 return;
-            case 'r':
-                executeSuperColliderScript();
-                return;
             case 'l':
                 editor.setLineWrapping(!editor.getLineWrapping());
                 return;
@@ -99,22 +97,10 @@ void Editor::executeScript() {
     if (selection) {
         editor.flashSelection();
         const string &s = editor.getText();
-        repl.eval(s);
+        repl->eval(s);
     } else {
         const string &s = getParagraph();
-        repl.evalMulti(s);
-    }
-}
-
-void Editor::executeSuperColliderScript() {
-    bool selection = editor.isSelection();
-    if (selection) {
-        editor.flashSelection();
-        const string &s = editor.getText();
-        screpl.eval(s);
-    } else {
-        const string &s = getParagraph();
-        screpl.evalMulti(s);
+        repl->evalMulti(s);
     }
 }
 
