@@ -11,13 +11,13 @@ Workspace::Workspace() {
     ed = new Editor(&repl);
     this->editors.push_back(ed);
     ed->setup();
-    repl.start("data/boot.hss");
+    repl.start("data/tidalStartup.hss");
 
     // create SC editor
     ed = new Editor(&screpl);
     this->editors.push_back(ed);
     ed->setup();
-    screpl.start();
+    screpl.start("data/scStartup.scd");
 
     this->currentEditor = 0;
     this->showReplBuffer = true;
@@ -25,6 +25,7 @@ Workspace::Workspace() {
 
 Workspace::~Workspace() {
     this->editors.clear();
+
     delete this->replLog;
     delete this->screplLog;
 }
