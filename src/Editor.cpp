@@ -82,8 +82,8 @@ void Editor::draw() {
     ofPushView();
     ofPushMatrix();
 
-    ofTranslate(viewportX, 0);
-    ofScale(0.5, 1);
+    ofTranslate(viewportX, viewportY / 2);
+    ofScale(0.5, 0.5);
 #endif
 
     ofxEditor::draw();

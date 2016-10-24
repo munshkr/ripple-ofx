@@ -23,12 +23,6 @@ Workspace::Workspace() {
     ed->setRepl(&screpl);
     screpl.start("data/scStartup.scd");
 
-#ifdef SPLIT_SCREEN
-    // Set viewport to half screen width
-    int w = (ofGetWindowMode() == OF_WINDOW) ? ofGetViewportWidth() : ofGetScreenWidth();
-    ed->setViewportX(w/2);
-#endif
-
     ofLog() << "SC editor X = " << ed->getViewportX();
 
     currentEditor = 0;
@@ -90,6 +84,13 @@ void Workspace::resize(int w, int h) {
     for (auto it = editors.begin(); it < editors.end(); it++) {
         (*it)->resize(w, h);
     }
+
+#ifdef SPLIT_SCREEN
+    editors[0]->setViewportX(0);
+    editors[0]->setViewportY(h / 2);
+    editors[1]->setViewportX(w / 2);
+    editors[1]->setViewportY(h / 2);
+#endif
 }
 
 void Workspace::quit() {
