@@ -1,9 +1,10 @@
 Ripple
 ======
 
-An OpenGL editor for [Tidal](http://tidalcycles.github.io/).  Inspired in
-[(fluxus)](http://www.pawfal.org/fluxus/) and written in
-[openframeworks](http://openframeworks.cc/).
+An OpenGL editor for [Tidal](http://tidalcycles.github.io/).  Based on the
+original source code of the text editor in
+[(fluxus)](http://www.pawfal.org/fluxus/), which was recently rewritten as an
+addon for [openframeworks](http://openframeworks.cc/).
 
 ![screenshot](http://i.imgur.com/U2gPoNv.png)
 
