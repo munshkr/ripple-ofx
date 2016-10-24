@@ -8,9 +8,9 @@ class ofApp : public ofBaseApp {
         void setup();
         void update();
         void draw();
-
         void keyPressed(int key);
         void windowResized(int w, int h);
+        void quit();
 
         bool debug; //< show grid and fps?
 

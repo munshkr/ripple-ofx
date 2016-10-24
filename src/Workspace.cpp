@@ -71,6 +71,10 @@ void Workspace::resize(int w, int h) {
     editors[currentEditor]->resize(w, h);
 }
 
+void Workspace::quit() {
+    this->screpl.eval("Server.killAll()");
+}
+
 void Workspace::setReplBuffer(bool value) {
     showReplBuffer = value;
 }

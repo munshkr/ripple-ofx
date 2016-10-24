@@ -15,6 +15,7 @@ class Workspace {
         void update();
         void keyPressed(int key);
         void resize(int w, int h);
+        void quit();
 
         // show/hide REPL output buffer
         void setReplBuffer(bool value);

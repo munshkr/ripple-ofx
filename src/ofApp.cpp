@@ -29,7 +29,7 @@ void ofApp::keyPressed(int key) {
     if (modifierPressed) {
         switch (key) {
             case 'q':
-                ofExit();
+                quit();
                 return;
             case 'd':
                 debug = !debug;
@@ -41,6 +41,11 @@ void ofApp::keyPressed(int key) {
     }
 
     workspace.keyPressed(key);
+}
+
+void ofApp::quit() {
+    workspace.quit();
+    ofExit();
 }
 
 void ofApp::windowResized(int w, int h) {
