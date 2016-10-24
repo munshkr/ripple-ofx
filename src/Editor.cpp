@@ -1,12 +1,11 @@
 #include "Editor.h"
 
-Editor::Editor(Repl* repl) {
-    this->repl = repl;
-}
+Editor::Editor() {
+    viewportX = 0;
+    viewportY = 0;
 
-Editor::~Editor() {}
+    ofxEditor();
 
-void Editor::setup() {
     // make sure to load editor font before anything else!
     //ofxEditor::loadFont("fonts/PrintChar21.ttf", 24);
     ofxEditor::loadFont("fonts/topaz/TopazPlus_a1200_v1.0.ttf", 96);
@@ -14,31 +13,35 @@ void Editor::setup() {
 
     // white text with gray shadow, on black background
     ofBackground(0);
-    //editor.getSettings().setTextShadowColor(ofColor::gray);
+    //getSettings().setTextShadowColor(ofColor::gray);
 
     // setup color scheme via xml file
     colorScheme.loadFile("colorScheme.xml");
-    editor.setColorScheme(&colorScheme);
+    setColorScheme(&colorScheme);
 
     // setup Tidal syntax via xml file
     syntax.loadFile("tidalSyntax.xml");
-    editor.getSettings().addSyntax(&syntax);
-    editor.getSettings().printSyntaxes();
+    getSettings().addSyntax(&syntax);
+    getSettings().printSyntaxes();
 
-    editor.setAutoFocus(true);
+    setAutoFocus(true);
 
     // open a file by default
     //ofFile testFile;
     //testFile.open("hi.tidal", ofFile::ReadOnly);
-    //editor.setText(testFile.readToBuffer().getText());
-    //ofLogNotice() << "num chars: " << editor.getNumCharacters() << " num lines: " << editor.getNumLines();
+    //setText(testFile.readToBuffer().getText());
+    //ofLogNotice() << "num chars: " << getNumCharacters() << " num lines: " << getNumLines();
 }
 
-void Editor::draw() {
-    editor.draw();
+Editor::~Editor() {}
+
+void Editor::setRepl(Repl* repl) {
+    this->repl = repl;
 }
 
-void Editor::update() {}
+Repl* Editor::getRepl() {
+    return repl;
+}
 
 void Editor::keyPressed(int key) {
     bool modifierPressed = ofxEditor::getSuperAsModifier() ? ofGetKeyPressed(OF_KEY_SUPER) : ofGetKeyPressed(OF_KEY_CONTROL);
@@ -46,39 +49,52 @@ void Editor::keyPressed(int key) {
     if (modifierPressed) {
         switch (key) {
             case 's':
-                if (editor.getColorScheme()) {
-                    editor.clearColorScheme();
+                if (getColorScheme()) {
+                    clearColorScheme();
                 } else {
-                    editor.setColorScheme(&colorScheme);
+                    setColorScheme(&colorScheme);
                 }
                 return;
             case 'e':
                 executeScript();
                 return;
             case 'l':
-                editor.setLineWrapping(!editor.getLineWrapping());
+                setLineWrapping(!getLineWrapping());
                 return;
             case 'n':
-                editor.setLineNumbers(!editor.getLineNumbers());
+                setLineNumbers(!getLineNumbers());
                 return;
             case 'z':
-                editor.setAutoFocus(!editor.getAutoFocus());
+                setAutoFocus(!getAutoFocus());
                 return;
         }
     }
 
-    editor.keyPressed(key);
+    ofxEditor::keyPressed(key);
 }
 
-void Editor::resize(int w, int h) {
-    editor.resize(w, h);
+void Editor::draw() {
+    // Split screen: scale to half screen and translate to viewportX
+
+    //ofPushStyle();
+    //ofPushView();
+    //ofPushMatrix();
+
+    //ofTranslate(viewportX, 0);
+    //ofScale(0.5, 1);
+
+    ofxEditor::draw();
+
+    //ofPopMatrix();
+    //ofPopView();
+    //ofPopStyle();
 }
 
 void Editor::executeScript() {
-    bool selection = editor.isSelection();
+    bool selection = isSelection();
     if (selection) {
-        editor.flashSelection();
-        const string s = editor.getText();
+        flashSelection();
+        const string s = getText();
         repl->eval(s);
     } else {
         const string s = getParagraph();
@@ -90,8 +106,8 @@ void Editor::executeScript() {
 }
 
 string Editor::getParagraph() {
-    unsigned int pos = editor.getCurrentPos();
-    const string text = editor.getText();
+    unsigned int pos = getCurrentPos();
+    const string text = getText();
 
     size_t start = text.rfind("\n\n", pos);
     if (start == string::npos) start = 0;
@@ -105,7 +121,23 @@ string Editor::getParagraph() {
     string subs = text.substr(start, len);
     ofLog() << "substring: '" << subs << "'";
 
-    editor.flashText(start, end);
+    flashText(start, end);
 
     return subs;
+}
+
+void Editor::setViewportX(float x) {
+    viewportX = x;
+}
+
+float Editor::getViewportX() {
+    return viewportX;
+}
+
+void Editor::setViewportY(float y) {
+    viewportY = y;
+}
+
+float Editor::getViewportY() {
+    return viewportY;
 }

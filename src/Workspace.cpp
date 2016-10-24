@@ -4,35 +4,43 @@ Workspace::Workspace() {
     Editor* ed;
 
     // create log viewers for each REPL
-    this->replLog = new ReplLog(&repl);
-    this->screplLog = new ReplLog(&screpl);
+    replLog = new ReplLog(&repl);
+    screplLog = new ReplLog(&screpl);
 
     // create Tidal editor
-    ed = new Editor(&repl);
-    this->editors.push_back(ed);
-    ed->setup();
+    ed = new Editor();
+    editors.push_back(ed);
+    ed->setRepl(&repl);
     repl.start("data/tidalStartup.hss");
 
+    ofLog() << "Tidal editor X = " << ed->getViewportX();
+
     // create SC editor
-    ed = new Editor(&screpl);
-    this->editors.push_back(ed);
-    ed->setup();
+    ed = new Editor();
+    editors.push_back(ed);
+    ed->setRepl(&screpl);
     screpl.start("data/scStartup.scd");
 
-    this->currentEditor = 0;
-    this->showReplBuffer = true;
+    // Split screen: set viewport to half screen width
+    //int w = (ofGetWindowMode() == OF_WINDOW) ? ofGetViewportWidth() : ofGetScreenWidth();
+    //ed->setViewportX(w/2);
+
+    ofLog() << "SC editor X = " << ed->getViewportX();
+
+    currentEditor = 0;
+    showReplBuffer = true;
 }
 
 Workspace::~Workspace() {
-    this->editors.clear();
+    editors.clear();
 
-    delete this->replLog;
-    delete this->screplLog;
+    delete replLog;
+    delete screplLog;
 }
 
 void Workspace::draw() {
     if (showReplBuffer) {
-        if (editors[currentEditor]->repl == &repl) {
+        if (editors[currentEditor]->getRepl() == &repl) {
             replLog->draw();
         } else {
             screplLog->draw();
@@ -40,11 +48,16 @@ void Workspace::draw() {
     }
 
     editors[currentEditor]->draw();
+
+    // Split screen: render both editors
+    //editors[0]->draw();
+    //editors[1]->draw();
 }
 
 void Workspace::update() {
-    editors[currentEditor]->update();
-    editors[currentEditor]->repl->readAsync();
+    for (auto it = editors.begin(); it < editors.end(); it++) {
+        (*it)->getRepl()->readAsync();
+    }
 }
 
 void Workspace::keyPressed(int key) {
@@ -68,7 +81,9 @@ void Workspace::keyPressed(int key) {
 }
 
 void Workspace::resize(int w, int h) {
-    editors[currentEditor]->resize(w, h);
+    for (auto it = editors.begin(); it < editors.end(); it++) {
+        (*it)->resize(w, h);
+    }
 }
 
 void Workspace::quit() {

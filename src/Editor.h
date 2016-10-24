@@ -3,28 +3,34 @@
 #include "ofxEditor.h"
 #include "Repl.h"
 
-class Editor {
+class Editor : public ofxEditor {
     public:
-        Editor(Repl* repl);
+        Editor();
         virtual ~Editor();
 
-        void setup();
-        void update();
         void draw();
         void keyPressed(int key);
-
-        /// reshape the drawing area
-        /// call this if you change the window size (fullscreen, etc)
-        void resize(int width, int height);
 
         // REPL evaluation
         string getParagraph();
         void executeScript();
 
-        Repl* repl;
+        Repl* getRepl();
+        void setRepl(Repl*);
+
+        void setViewportX(float x);
+        float getViewportX();
+
+        void setViewportY(float y);
+        float getViewportY();
 
     private:
         ofxEditor editor;
         ofxEditorColorScheme colorScheme;
         ofxEditorSyntax syntax;
+
+        Repl* repl;
+
+        int viewportX;
+        int viewportY;
 };
