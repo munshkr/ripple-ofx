@@ -47,7 +47,10 @@ Repl::Repl() {
 
 Repl::~Repl() {
     if (running) {
-        if (replPid) kill(replPid, SIGTERM);
+        if (replPid) {
+            ofLog() << "send SIGTERM to " << replPid;
+            kill(replPid, SIGTERM);
+        }
 
         close(PARENT_READ_FD);
         close(PARENT_WRITE_FD);

@@ -5,7 +5,7 @@
 
 #include <ofLog.h>
 
-const string DEFAULT_SCLANG_PATH = "/usr/bin/sclang";
+const string DEFAULT_SCLANG_PATH = "/usr/local/bin/sclang";
 
 
 SuperColliderRepl::SuperColliderRepl() {
@@ -45,5 +45,10 @@ void SuperColliderRepl::execProcess() {
         const_cast<char*>(sclangPath.c_str()),
         0
     };
-    execv(argv[0], argv);
+
+    int ret = execv(argv[0], argv);
+
+    if (ret) {
+      ofLogError() << "execv failed: " << argv[0];
+    }
 }

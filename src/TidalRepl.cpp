@@ -79,5 +79,10 @@ void TidalRepl::execProcess() {
 
     setenv("TIDAL_TEMPO_IP", tidalHost.c_str(), 1);
     setenv("TIDAL_TEMPO_PORT", port.str().c_str(), 1);
-    execv(argv[0], argv);
+
+    int ret = execv(argv[0], argv);
+
+    if (ret) {
+      ofLogError() << "failed to execv " << argv[0] << " " << argv[1];
+    }
 }

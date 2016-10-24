@@ -5,7 +5,7 @@ Workspace::Workspace() {
 
     // create log viewers for each REPL
     this->replLog = new ReplLog(&repl);
-    //this->screplLog = new ReplLog(&screpl);
+    this->screplLog = new ReplLog(&screpl);
 
     // create Tidal editor
     ed = new Editor(&repl);
@@ -14,10 +14,10 @@ Workspace::Workspace() {
     repl.start("data/boot.hss");
 
     // create SC editor
-    ed = new Editor(&repl);
+    ed = new Editor(&screpl);
     this->editors.push_back(ed);
     ed->setup();
-    repl.start();
+    screpl.start();
 
     this->currentEditor = 0;
     this->showReplBuffer = true;
@@ -26,7 +26,7 @@ Workspace::Workspace() {
 Workspace::~Workspace() {
     this->editors.clear();
     delete this->replLog;
-    //delete this->screplLog;
+    delete this->screplLog;
 }
 
 void Workspace::draw() {
