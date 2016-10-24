@@ -1,5 +1,7 @@
 #include "Editor.h"
 
+#define SPLIT_SCREEN
+
 Editor::Editor() {
     viewportX = 0;
     viewportY = 0;
@@ -74,20 +76,23 @@ void Editor::keyPressed(int key) {
 }
 
 void Editor::draw() {
-    // Split screen: scale to half screen and translate to viewportX
+#ifdef SPLIT_SCREEN
+    // Scale to half screen and translate to viewportX
+    ofPushStyle();
+    ofPushView();
+    ofPushMatrix();
 
-    //ofPushStyle();
-    //ofPushView();
-    //ofPushMatrix();
-
-    //ofTranslate(viewportX, 0);
-    //ofScale(0.5, 1);
+    ofTranslate(viewportX, 0);
+    ofScale(0.5, 1);
+#endif
 
     ofxEditor::draw();
 
-    //ofPopMatrix();
-    //ofPopView();
-    //ofPopStyle();
+#ifdef SPLIT_SCREEN
+    ofPopMatrix();
+    ofPopView();
+    ofPopStyle();
+#endif
 }
 
 void Editor::executeScript() {

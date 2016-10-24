@@ -1,5 +1,7 @@
 #include "Workspace.h"
 
+#define SPLIT_SCREEN
+
 Workspace::Workspace() {
     Editor* ed;
 
@@ -21,9 +23,11 @@ Workspace::Workspace() {
     ed->setRepl(&screpl);
     screpl.start("data/scStartup.scd");
 
-    // Split screen: set viewport to half screen width
-    //int w = (ofGetWindowMode() == OF_WINDOW) ? ofGetViewportWidth() : ofGetScreenWidth();
-    //ed->setViewportX(w/2);
+#ifdef SPLIT_SCREEN
+    // Set viewport to half screen width
+    int w = (ofGetWindowMode() == OF_WINDOW) ? ofGetViewportWidth() : ofGetScreenWidth();
+    ed->setViewportX(w/2);
+#endif
 
     ofLog() << "SC editor X = " << ed->getViewportX();
 
@@ -47,11 +51,13 @@ void Workspace::draw() {
         }
     }
 
+#ifdef SPLIT_SCREEN
+    // Render both editors
+    editors[0]->draw();
+    editors[1]->draw();
+#else
     editors[currentEditor]->draw();
-
-    // Split screen: render both editors
-    //editors[0]->draw();
-    //editors[1]->draw();
+#endif
 }
 
 void Workspace::update() {
