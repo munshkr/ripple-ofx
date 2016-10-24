@@ -13,6 +13,9 @@ class SuperColliderRepl : public Repl {
         // Start REPL process and run bootload script
         void start(const string& bootPath);
 
+        // Evaluate a string and emit input event
+        void eval(string s);
+
         void setSclangPath(const string &path);
         string getSclangPath() const;
 

@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <regex>
 
 #include <ofLog.h>
 
@@ -26,10 +27,20 @@ void SuperColliderRepl::start(const string& bootPath) {
     if (f.is_open()) {
         stringstream f_buf;
         f_buf << f.rdbuf();
+
+        sleep(2);
         eval(f_buf.str());
     } else {
         ofLogWarning() << "SuperColliderRepl: Unable to open bootstrap file at " << bootPath;
     }
+}
+
+void SuperColliderRepl::eval(string s) {
+    // remove comments and linefeeds
+    regex comment_re("(//[^\\n]*)?\\n");
+    string cs = regex_replace(s, comment_re, " ");
+
+    Repl::eval(cs);
 }
 
 void SuperColliderRepl::setSclangPath(const string &path) {
