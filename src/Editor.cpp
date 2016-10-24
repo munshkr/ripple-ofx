@@ -82,6 +82,9 @@ void Editor::draw() {
     ofPushView();
     ofPushMatrix();
 
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(viewportX, 0, m_width/2, m_height);
+
     ofTranslate(viewportX, viewportY / 2);
     ofScale(0.5, 0.5);
 #endif
@@ -89,6 +92,8 @@ void Editor::draw() {
     ofxEditor::draw();
 
 #ifdef SPLIT_SCREEN
+    glDisable(GL_SCISSOR_TEST);
+
     ofPopMatrix();
     ofPopView();
     ofPopStyle();
