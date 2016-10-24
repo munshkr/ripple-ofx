@@ -11,4 +11,12 @@ s.options.numInputBusChannels = 2; // set this to your hardware input channel si
 // boot the server and start SuperDirt
 s.waitForBoot {
   ~dirt = SuperDirt(2, s); // two output channels, increase if you want to pan across more channels
+  ~dirt.loadSoundFiles;   // load samples (path containing a wildcard can be passed in)
+
+  s.sync; // wait for samples to be read
+
+  "wait 5 seconds for Tidal to start listening on UDP port 57120...".postln;
+  5.wait;
+
+  ~dirt.start(57120, [0, 0]);   // start listening on port 57120, create two orbits, each sending audio to channel 0. You can direct sounds to the orbits from tidal e.g. by: `# orbit "0 1 1"
 }
