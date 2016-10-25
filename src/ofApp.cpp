@@ -8,6 +8,8 @@ void ofApp::setup() {
 
     // handle ESC internally since we use it to exit selection
     ofSetEscapeQuitsApp(false);
+
+    subThread.startThread(true);
 }
 
 void ofApp::draw() {
@@ -44,6 +46,7 @@ void ofApp::keyPressed(int key) {
 }
 
 void ofApp::quit() {
+    subThread.stopThread();
     workspace.quit();
     ofExit();
 }
