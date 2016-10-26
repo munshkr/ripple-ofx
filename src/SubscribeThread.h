@@ -1,8 +1,26 @@
+#include "zmq.hpp"
+
 class SubscribeThread : public ofThread {
     void threadedFunction() {
+        zmq::context_t ctx(1);
+
+        zmq::socket_t subscriber(ctx, ZMQ_SUB);
+
+        subscriber.connect("tcp://localhost:9000");
+        subscriber.setsockopt(ZMQ_SUBSCRIBE, "", strlen(""));
+
+        ofLog() << "[subThread] started listening";
+
         while (isThreadRunning()) {
-            ofLog() << "[thread] sleeping 1 second";
-            sleep(1000);
+            zmq::message_t msg;
+            subscriber.recv(&msg);
+
+            string message = string(static_cast<char*>(msg.data()), msg.size());
+
+            ofLog() << "received message: '" << message << "'" << endl;
         }
+
+        subscriber.close();
+        ctx.close();
     }
 };

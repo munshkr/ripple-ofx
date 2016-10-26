@@ -108,9 +108,6 @@ void Editor::executeScript() {
         repl->eval(s);
     } else {
         const string s = getParagraph();
-        if (repl->isRunning()) {
-            ofLog() << "its running ok";
-        }
         repl->evalMulti(s);
     }
 }
