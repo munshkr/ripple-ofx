@@ -23,6 +23,7 @@ class Workspace {
 
     private:
         Editor* createEditor(Repl& repl);
+        Editor* createEditor();
 
         // REPLs
         TidalRepl repl;

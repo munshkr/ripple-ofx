@@ -10,11 +10,21 @@ Workspace::Workspace() {
     createEditor(repl);
     createEditor(screpl);
 
+#ifdef SPLIT_SCREEN
+    // 3rd editor for split screen
+    createEditor();
+#endif
+
     repl.start("data/tidalStartup.hss");
     screpl.start("data/scStartup.scd");
 
     currentEditor = 0;
     showReplBuffer = true;
+
+    // force resize to position editors
+    int w = (ofGetWindowMode() == OF_WINDOW) ? ofGetViewportWidth() : ofGetScreenWidth();
+    int h = (ofGetWindowMode() == OF_WINDOW) ? ofGetViewportHeight() : ofGetScreenHeight();
+    resize(w, h);
 }
 
 Workspace::~Workspace() {
@@ -35,8 +45,8 @@ void Workspace::draw() {
 
 #ifdef SPLIT_SCREEN
     // Render both editors
-    editors[0]->draw();
-    editors[1]->draw();
+    editors[currentEditor]->draw();
+    editors[2]->draw();
 #else
     editors[currentEditor]->draw();
 #endif
@@ -44,7 +54,8 @@ void Workspace::draw() {
 
 void Workspace::update() {
     for (auto it = editors.begin(); it < editors.end(); it++) {
-        (*it)->getRepl()->readAsync();
+        Repl* repl = (*it)->getRepl();
+        if (repl) repl->readAsync();
     }
 }
 
@@ -72,8 +83,11 @@ void Workspace::resize(int w, int h) {
 #ifdef SPLIT_SCREEN
     editors[0]->setViewportX(0);
     editors[0]->setViewportY(h / 2);
-    editors[1]->setViewportX(w / 2);
+    editors[1]->setViewportX(0);
     editors[1]->setViewportY(h / 2);
+
+    editors[2]->setViewportX(w / 2);
+    editors[2]->setViewportY(h / 2);
 #endif
 
     for (auto it = editors.begin(); it < editors.end(); it++) {
@@ -97,5 +111,11 @@ Editor* Workspace::createEditor(Repl& repl) {
     Editor* e = new Editor();
     editors.push_back(e);
     e->setRepl(&repl);
+    return e;
+}
+
+Editor* Workspace::createEditor() {
+    Editor* e = new Editor();
+    editors.push_back(e);
     return e;
 }

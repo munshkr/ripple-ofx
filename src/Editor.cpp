@@ -3,6 +3,8 @@
 #define SPLIT_SCREEN
 
 Editor::Editor() {
+    repl = NULL;
+
     viewportX = 0;
     viewportY = 0;
 
@@ -101,6 +103,8 @@ void Editor::draw() {
 }
 
 void Editor::executeScript() {
+    if (!repl) return;
+
     bool selection = isSelection();
     if (selection) {
         flashSelection();
