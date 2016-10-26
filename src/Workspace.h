@@ -5,6 +5,7 @@
 #include "ReplLog.h"
 #include "TidalRepl.h"
 #include "SuperColliderRepl.h"
+#include "SubscribeThread.h"
 
 class Workspace {
     public:
@@ -37,4 +38,6 @@ class Workspace {
         unsigned int currentEditor;
 
         bool showReplBuffer;
+
+        SubscribeThread subThread;
 };

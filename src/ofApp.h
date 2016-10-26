@@ -2,7 +2,6 @@
 
 #include "ofMain.h"
 #include "Workspace.h"
-#include "SubscribeThread.h"
 
 class ofApp : public ofBaseApp {
     public:
@@ -17,6 +16,4 @@ class ofApp : public ofBaseApp {
 
     private:
         Workspace workspace;
-
-        SubscribeThread subThread;
 };

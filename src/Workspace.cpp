@@ -12,7 +12,9 @@ Workspace::Workspace() {
 
 #ifdef SPLIT_SCREEN
     // 3rd editor for split screen
-    createEditor();
+    Editor* ed = createEditor();
+    subThread.setEditor(ed);
+    subThread.startThread(true);
 #endif
 
     repl.start("data/tidalStartup.hss");
@@ -97,6 +99,9 @@ void Workspace::resize(int w, int h) {
 
 void Workspace::quit() {
     this->screpl.eval("Server.killAll()");
+#ifdef SPLIT_SCREEN
+    subThread.stopThread();
+#endif
 }
 
 void Workspace::setReplBuffer(bool value) {
