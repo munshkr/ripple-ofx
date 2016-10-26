@@ -3,27 +3,15 @@
 #define SPLIT_SCREEN
 
 Workspace::Workspace() {
-    Editor* ed;
-
     // create log viewers for each REPL
-    replLog = new ReplLog(&repl);
-    screplLog = new ReplLog(&screpl);
+    replLog = new ReplLog(repl);
+    screplLog = new ReplLog(screpl);
 
-    // create Tidal editor
-    ed = new Editor();
-    editors.push_back(ed);
-    ed->setRepl(&repl);
+    createEditor(repl);
+    createEditor(screpl);
+
     repl.start("data/tidalStartup.hss");
-
-    ofLog() << "Tidal editor X = " << ed->getViewportX();
-
-    // create SC editor
-    ed = new Editor();
-    editors.push_back(ed);
-    ed->setRepl(&screpl);
     screpl.start("data/scStartup.scd");
-
-    ofLog() << "SC editor X = " << ed->getViewportX();
 
     currentEditor = 0;
     showReplBuffer = true;
@@ -81,16 +69,16 @@ void Workspace::keyPressed(int key) {
 }
 
 void Workspace::resize(int w, int h) {
-    for (auto it = editors.begin(); it < editors.end(); it++) {
-        (*it)->resize(w, h);
-    }
-
 #ifdef SPLIT_SCREEN
     editors[0]->setViewportX(0);
     editors[0]->setViewportY(h / 2);
     editors[1]->setViewportX(w / 2);
     editors[1]->setViewportY(h / 2);
 #endif
+
+    for (auto it = editors.begin(); it < editors.end(); it++) {
+        (*it)->resize(w, h);
+    }
 }
 
 void Workspace::quit() {
@@ -103,4 +91,11 @@ void Workspace::setReplBuffer(bool value) {
 
 bool Workspace::getReplBuffer() const {
     return showReplBuffer;
+}
+
+Editor* Workspace::createEditor(Repl& repl) {
+    Editor* e = new Editor();
+    editors.push_back(e);
+    e->setRepl(&repl);
+    return e;
 }

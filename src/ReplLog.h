@@ -6,7 +6,7 @@
 
 class ReplLog : public ReplListener {
     public:
-        ReplLog(Repl*);
+        ReplLog(Repl&);
         virtual ~ReplLog();
         void draw();
 

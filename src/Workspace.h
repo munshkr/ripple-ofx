@@ -22,6 +22,8 @@ class Workspace {
         bool getReplBuffer() const;
 
     private:
+        Editor* createEditor(Repl& repl);
+
         // REPLs
         TidalRepl repl;
         SuperColliderRepl screpl;

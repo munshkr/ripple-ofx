@@ -2,10 +2,10 @@
 
 const unsigned int OUTPUT_FONT_SIZE = 12;
 
-ReplLog::ReplLog(Repl* repl) {
-    this->repl = repl;
+ReplLog::ReplLog(Repl& repl) {
+    this->repl = &repl;
     this->bufferSize = 0;
-    repl->setListener(this);
+    repl.setListener(this);
 }
 
 ReplLog::~ReplLog() {};
